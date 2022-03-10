@@ -1,4 +1,4 @@
-public class Mole implements Component{
+public class Mole implements CoordinatedAsset{
 
     private String name;
     private String secret;
@@ -9,42 +9,44 @@ public class Mole implements Component{
         this.secret = secret;
         setMediator(mediator);
     }
+
+    @Override
+    public void statusChange() {
+        mediator.hasChanged(this);
+    }
+
+    @Override
+    public String getSecret() {
+        return secret;
+    }
+
+    @Override
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public StaticMediator getMediator() {
+        return mediator;
+    }
+
+    @Override
+    public String toString(){
+        return this.name + " " + this.secret;
+    }
     @Override
     public void setMediator(StaticMediator mediator) {
         this.mediator = mediator;
     }
 
-    @Override
-    public void statusChange() {
-        String temp = this.secret;
-        this.secret = this.getMediator().getS4().getSecret();
-        this.getMediator().getS4().setSecret(temp);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public StaticMediator getMediator() {
-        return mediator;
-    }
-
-    public String toString(){
-        if(this==null){
-            return "null";
-        }
-        return this.name + " " + this.secret ;
-    }
 }

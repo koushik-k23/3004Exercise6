@@ -6,9 +6,10 @@ public class StaticMediator {
     private Agent a1, c1;
     private Mole m1;
     //step 2
-    //private Agent a2, a3;
-    //private Mole m2, m3;
-    //private CompositeAgent duo;
+    private Agent a2, a3;
+    private Mole m2, m3;
+
+    private CompositeAgent duo;
 
     public void createSpyTeam () {
 
@@ -21,11 +22,11 @@ public class StaticMediator {
         c1 = new Agent("cleaner ", " no secret ",this);
 
         //step2
-        //a2 = new Agent("a2 ", " ultra secret 2 ",this);
-        //m2 = new Mole("m2 ", " deep secret 2 ", this);
-        //a3 = new Agent("a3 ", " ultra secret 3 ",this);
-        //m3 = new Mole("m3 ", " deep secret 3 ", this);
-        //duo = new CompositeAgent (new ArrayList<CoordinatedAsset>(Arrays.asList(a2, m2)));
+        a2 = new Agent("a2 ", " ultra secret 2 ",this);
+        m2 = new Mole("m2 ", " deep secret 2 ", this);
+        a3 = new Agent("a3 ", " ultra secret 3 ",this);
+        m3 = new Mole("m3 ", " deep secret 3 ", this);
+        duo = new CompositeAgent (new ArrayList<CoordinatedAsset>(Arrays.asList(a2, m2)));
 
 
     }
@@ -63,13 +64,17 @@ public class StaticMediator {
         printStatus();
     }
 
-//    public void runScenario2 () {
-//        System.out.println("Initial set up");
-//        printStatus();
-//        duo.statusChange();
-//        a3.statusChange();
-//        m3.statusChange();
-//    }
+    public void runScenario2 () {
+        System.out.println("Initial set up");
+        printStatus();
+        System.out.println("Team Status changed");
+        duo.statusChange();
+        printStatus();
+        a3.statusChange();
+        printStatus();
+        m3.statusChange();
+        printStatus();
+    }
 
     private void printStatus() {
         System.out.println(s1.toString());
@@ -90,45 +95,55 @@ public class StaticMediator {
         }
         System.out.println(c1.toString());
         //Step 2
-        //System.out.println(duo);
+        duo.printing();
     }
-
-    public Spy getS1() {
-        return s1;
-    }
-
-    public Spy getS2() {
-        return s2;
-    }
-
-    public Spy getS3() {
-        return s3;
-    }
-
-    public Spy getS4() {
-        return s4;
-    }
-
-    public Agent getA1() {
-        return a1;
-    }
-
-    public Agent getC1() {
-        return c1;
-    }
-
-    public Mole getM1() {
-        return m1;
-    }
-
-    public void setA1(Agent a1) {
-        this.a1 = a1;
-    }
-
-    public void setM1(Mole m1) {
-        this.m1 = m1;
-    }
-
    //missing code
 
+    public void hasChanged(CoordinatedAsset obj){
+        if (obj.getName().equals("spy1 ")){
+            String temp = s1.getSecret();
+            s1.setSecret(s2.getSecret());
+            s2.setSecret(temp);
+        }
+        else if (obj.getName().equals("spy2 ")){
+            s2.setSecret(s2.getSecret()+" " + s3.getSecret());
+        }
+       else if (obj.getName().equals("spy3 ")){
+           s3.setClearance(s1.getClearance()+ s2.getClearance());
+           s4.setClearance(0);
+        }
+       else if (obj.getName().equals("spy4 ")){
+           if(s4.getClearance() > 0){
+               s1.setClearance(s4.getClearance());
+               s2.setClearance(s3.getClearance());
+           }
+        }
+       else if (obj.getName().equals("a1 ")){
+           a1.setSecret(s3.getSecret());
+           m1.setSecret("forgotten");
+        }
+       else if (obj.getName().equals("a2 ")){
+           a2.setSecret(a1.getSecret()+" "+m1.getSecret());
+        }
+       else if (obj.getName().equals("a3 ")){
+            duo.settingSecrets(a1.getSecret()+" "+m2.getSecret());
+            a3.setSecret(s1.getSecret());
+            m3.setSecret("forgotten");
+        }
+       else if (obj.getName().equals("m1 ")){
+            String temp = m1.getSecret();
+            m1.setSecret(s4.getSecret());
+            s4.setSecret(temp);
+        }
+       else if (obj.getName().equals("m2 ")){
+           s1.setSecret(m2.getSecret());
+        }
+        else if (obj.getName().equals("m3 ")){
+            duo.swappingSecrets(m1);
+        }
+       else if (obj.getName().equals(("cleaner "))){
+           a1 = null;
+           m1 = null;
+        }
+    }
 }
